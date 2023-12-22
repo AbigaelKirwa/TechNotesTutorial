@@ -11,12 +11,12 @@ const getAllNotes = asyncHandler(async(req, res)=>{
 })
 
 const createNote = asyncHandler(async(req, res)=>{
-    const {user, title, text, completed} = req.body
+    const {user, username, title, text, completed} = req.body
     //confirm data
-    if(!user || !title || !text || typeof completed !== 'boolean'){
+    if(!user || !username || !title || !text || typeof completed !== 'boolean'){
         return res.status(400).json({message:"all fields are required"})
     }
-    const noteObject = {user, title, text, completed}
+    const noteObject = {user, username, title, text, completed}
     const note = await Note.create(noteObject)
     if(note){
         return res.status(201).json({message:"note created successfully"})
@@ -27,8 +27,8 @@ const createNote = asyncHandler(async(req, res)=>{
 })
 
 const updateNote = asyncHandler(async(req, res)=>{
-    const {id, user, title, text, completed} = req.body
-    if(!id || !user || !title || !text || typeof completed !== 'boolean'){
+    const {id, user, username, title, text, completed} = req.body
+    if(!id || !user || !username || !title || !text || typeof completed !== 'boolean'){
         return res.status(400).json({message:"all fields are required"})
     }
     const note = await Note.findById(id).exec()
@@ -36,6 +36,7 @@ const updateNote = asyncHandler(async(req, res)=>{
         return res.status(400).json({message:"note not found"})
     }
     note.user = user,
+    note.username = username,
     note.title = title,
     note.text = text, 
     note.completed = completed
